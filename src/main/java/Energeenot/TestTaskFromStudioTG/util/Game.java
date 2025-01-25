@@ -2,18 +2,16 @@ package Energeenot.TestTaskFromStudioTG.util;
 
 import Energeenot.TestTaskFromStudioTG.dto.GameInfoResponse;
 import lombok.Getter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 @Getter
+@Slf4j
 public class Game {
 
-    private static final Logger log = LoggerFactory.getLogger(Game.class);
     private final String gameId;
     private final int width;
     private final int height;
     private final int minesCount;
-    private boolean completed;
     private GameState gameState;
 
     public Game(String gameId, int width, int height, int minesCount) {
@@ -21,20 +19,19 @@ public class Game {
         this.width = width;
         this.height = height;
         this.minesCount = minesCount;
-        this.completed = false;
-        this.gameState = new GameState(width, height, minesCount, completed);
+        this.gameState = new GameState(width, height, minesCount);
     }
 
     public GameInfoResponse makeTurn(int row, int col) {
-        if (completed){
-            log.info("Игра завершена");
-            throw new IllegalStateException("Игра уже завершина"); //todo: подумать надо так или иначе
+        log.info("Пользователь делает ход в ряд {} и столбец {}  в игре с ID {}", row, col, this.gameId);
+        if (gameState.isCompleted()){
+            log.info("Попытка сделать ход после завершения игры");
+            throw new IllegalStateException("Игра завершена");
         }
 
         gameState.openCell(row, col);
 
         if (gameState.isCompleted()){
-            completed = true;
             log.info("Игра завершена");
         }
 
@@ -43,9 +40,8 @@ public class Game {
                 .width(width)
                 .height(height)
                 .minesCount(minesCount)
-                .completed(completed)
+                .completed(gameState.isCompleted())
                 .field(gameState.getBoard())
                 .build();
     }
-
 }
