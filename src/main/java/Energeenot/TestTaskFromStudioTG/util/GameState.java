@@ -23,12 +23,12 @@ public class GameState {
     private int openedCellsCount;
     private final int totalSafeCell;
 
-    public GameState(int width, int height, int minesCount, boolean completed) {
+    public GameState(int width, int height, int minesCount) {
         this.width = width;
         this.height = height;
-        this.field = new int[width][height];
+        this.field = new int[height][width];
         this.openedCells = new boolean[height][width];
-        this.completed = completed;
+        this.completed = false;
         this.board = new String[height][width];
         this.openedCellsCount = 0;
         this.totalSafeCell = width * height - minesCount;
@@ -38,8 +38,8 @@ public class GameState {
     }
 
     private void initializeBoard(int width, int height) {
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
                 board[i][j] = EMPTY_CELL;
             }
         }
@@ -93,8 +93,7 @@ public class GameState {
         log.info("Проверка ячеек с координатами {} ряд {} столбец", row, col);
         if (!isValidCell(row, col) || completed) {
             log.error("{} ряд {} столбец неккоректны, либо игра окончена", row, col);
-            return;
-//            throw new IllegalArgumentException("Невалидная ячейка, либо игра окончена");
+            throw new IllegalArgumentException("Невалидная ячейка, либо игра окончена");
         }
 
         if (openedCells[row][col]) {
@@ -125,8 +124,8 @@ public class GameState {
             }
         }
 
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
                 if (openedCells[i][j]) {
                     if (field[i][j] == MINE) {
                         continue;
@@ -145,20 +144,11 @@ public class GameState {
 
     // когда пользователь взорвался explode = true, иначе false
     public void revealAllBoard(boolean explode) {
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
                 board[i][j] = (field[i][j] == MINE)
                         ? (explode ? EXPLODED_MINE_SYMBOL : MINE_SYMBOL)
                         : String.valueOf(field[i][j]);
-                //
-//                if (field[i][j] == MINE) {
-//                    if (explode){
-//                        board[i][j] = EXPLODED_MINE_SYMBOL;
-//                    }
-//                    else board[i][j] = MINE_SYMBOL;
-//                }
-//                else board[i][j] = String.valueOf(field[i][j]);
-                //
             }
         }
     }
