@@ -20,7 +20,7 @@ public class GameService {
 
         Game game = new Game(gameId, newGameRequest.getWidth(), newGameRequest.getHeight(), newGameRequest.getMinesCount());
         games.put(gameId, game);
-        log.info("Создана игра с ID {}", gameId);
+        log.info("Создана игра с ID {}, шириной {}, высотой {}, количеством мин {}", gameId, newGameRequest.getWidth(), newGameRequest.getHeight(), newGameRequest.getMinesCount());
         return GameInfoResponse.builder()
                 .gameId(gameId)
                 .width(newGameRequest.getWidth())
