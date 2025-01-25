@@ -38,16 +38,6 @@ public class MinesweeperController {
         log.info("Делается ход в игре с ID {} на {} ряд и на {} столбец", gameTurnRequest.getGameId(), gameTurnRequest.getRow(), gameTurnRequest.getCol());
         Game game = gameService.findGameById(gameTurnRequest.getGameId());
         GameInfoResponse response = game.makeTurn(gameTurnRequest.getRow(), gameTurnRequest.getCol());
-
-
-        String[][] field = response.getField();
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                System.out.print(field[i][j] + " ");
-            }
-            System.out.println();
-        }
         return ResponseEntity.ok(response);
-
     }
 }
